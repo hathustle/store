@@ -18,8 +18,8 @@ RUN npm install
 
 # Build the application
 RUN npm run build
+RUN medusa exec ./src/scripts/seed.js
 RUN cd ./.medusa/server
-RUN node ./src/scripts/seed.js
 
 # Expose the backend service port
 EXPOSE 9000
