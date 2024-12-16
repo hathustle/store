@@ -17,7 +17,7 @@ RUN npm install
 RUN medusa db:migrate --verbose
 
 # Build the application
-RUN npm build
+RUN npm run build
 
 # Expose the backend service port
 EXPOSE 9000
