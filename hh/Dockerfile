@@ -10,7 +10,7 @@ RUN npm install @medusajs/cli --global
 # @mikro-orm/core @mikro-orm/knex @mikro-orm/migrations @mikro-orm/postgresql awilix pg
 
 # Install project dependencies
-RUN npm install
+RUN rm -rf node_modules && npm install
 # --frozen-lockfile
 
 # Run database migrations
