@@ -14,10 +14,10 @@ RUN npm install
 # --frozen-lockfile
 
 # Run database migrations
-RUN medusa migrations run --verbose
 
 # Build the application
 RUN npm run build
+RUN medusa migrations run --verbose
 RUN npm run seed
 RUN cd ./.medusa/server
 
