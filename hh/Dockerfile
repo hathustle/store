@@ -15,10 +15,10 @@ RUN npm install
 
 # Run database migrations
 RUN medusa migrations run --verbose
-RUN npm run seed
 
 # Build the application
 RUN npm run build
+RUN npm run seed
 RUN cd ./.medusa/server
 
 # Expose the backend service port
