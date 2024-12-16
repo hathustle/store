@@ -23,4 +23,4 @@ RUN npm run build
 EXPOSE 9000
 
 # Run the backend service
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
