@@ -17,9 +17,10 @@ RUN npm install
 
 # Build the application
 RUN npm run build
-RUN cd ./.medusa/server
 RUN medusa migrations run --verbose
 RUN npm run seed
+
+RUN cd ./.medusa/server
 
 # Expose the backend service port
 EXPOSE 9000
