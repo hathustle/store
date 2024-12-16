@@ -14,10 +14,11 @@ RUN npm install
 # --frozen-lockfile
 
 # Run database migrations
-RUN medusa migrations run --verbose
+# RUN medusa migrations run --verbose
 
 # Build the application
 RUN npm run build
+RUN node ./.medusa/server/src/scripts/seed.js
 
 # Expose the backend service port
 EXPOSE 9000
