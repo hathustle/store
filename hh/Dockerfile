@@ -16,7 +16,7 @@ RUN npm install
 # Run database migrations
 
 # Build the application
-RUN medusa db:migration --verbose
+RUN medusa db:migrate --verbose
 RUN npm run build
 RUN npm run seed
 RUN cd ./.medusa/server
