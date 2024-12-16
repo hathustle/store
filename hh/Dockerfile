@@ -14,7 +14,7 @@ RUN npm install
 # --frozen-lockfile
 
 # Run database migrations
-RUN node --experimental-modules --experimental-top-level-await $(yarn bin medusa) db:migrate --verbose
+RUN medusa db:migrate --verbose
 
 # Build the application
 RUN npm build
