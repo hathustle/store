@@ -11,6 +11,10 @@ RUN yarn install  --frozen-lockfile
 
 RUN npx medusa db:migrate --verbose
 
+RUN yarn
+
+RUN yarn build
+
 # Expose the backend service port
 EXPOSE 9000
 
