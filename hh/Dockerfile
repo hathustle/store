@@ -10,7 +10,8 @@ RUN npm install @medusajs/medusa-cli --global
 # @mikro-orm/core @mikro-orm/knex @mikro-orm/migrations @mikro-orm/postgresql awilix pg
 
 # Install project dependencies
-RUN npm install --frozen-lockfile
+RUN npm install 
+# --frozen-lockfile
 
 # Run database migrations
 RUN node --experimental-modules --experimental-top-level-await $(yarn bin medusa) db:migrate --verbose
