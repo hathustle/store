@@ -18,7 +18,7 @@ RUN npm install
 
 # Build the application
 RUN npm run build
-RUN medusa exec ./src/scripts/seed.js
+RUN npm run seed
 RUN cd ./.medusa/server
 
 # Expose the backend service port
