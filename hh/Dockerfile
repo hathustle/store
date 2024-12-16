@@ -10,16 +10,16 @@ RUN npm install @medusajs/cli --global
 # @mikro-orm/core @mikro-orm/knex @mikro-orm/migrations @mikro-orm/postgresql awilix pg
 
 # Install project dependencies
-RUN npm install 
+RUN npm install
 # --frozen-lockfile
 
 # Run database migrations
 
 # Build the application
-RUN medusa db:migrate --verbose
 RUN npm run build
-RUN npm run seed
 RUN cd ./.medusa/server
+RUN medusa db:migrate --verbose
+RUN npm run seed
 
 # Expose the backend service port
 EXPOSE 9000
