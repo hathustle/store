@@ -15,12 +15,13 @@ RUN npm install @medusajs/cli --global
 # Run database migrations
 
 # Build the application
-RUN npm run build
+# RUN npm run build
+RUN npm run deploy
+RUN npm run seed
+
 RUN cd ./.medusa/server
 RUN rm -rf node_modules && npm install
 
-RUN npm run deploy
-RUN npm run seed
 
 
 # Expose the backend service port
