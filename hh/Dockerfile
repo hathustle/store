@@ -16,8 +16,9 @@ RUN npm install @medusajs/cli --global
 # Run database migrations
 RUN npm install
 RUN npm run build
-RUN mv .env ./.medusa/server/.env
-RUN cd ./.medusa/server && npm run predeploy && npm run start
+
+RUN npm run predeploy 
+RUN cd ./.medusa/server &&  && npm run start
 # RUN npm medusa db:migrate
 # Build the application
 # RUN npm run deploy
