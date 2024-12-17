@@ -1,33 +1,28 @@
-# Use the lightweight Debian Bullseye Slim as the base image
-FROM node:20-bullseye-slim
+FROM node:20-bullseye
 
 # Set the working directory
 WORKDIR /app
 
-# Install system dependencies: curl, Python, pip, and required tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    unzip \
-    python3 \
-    python3-pip \
-    python-is-python3 \
-    ca-certificates \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install Deno
-RUN curl -fsSL https://deno.land/x/install/install.sh | sh && \
-    ln -s /root/.deno/bin/deno /usr/local/bin/deno
-
-# Add Deno to PATH
-ENV PATH="/root/.deno/bin:${PATH}"
-
-# Copy the application code
+# Copy package files and install dependencies
 COPY . .
-RUN deno install
-RUN deno run deploy
-RUN deno run seed
+RUN apt-get update && apt-get install -y python3 python3-pip python-is-python3
+RUN npm install @medusajs/cli --global
 
-# RUN cd ./.medusa/server
+# @mikro-orm/core @mikro-orm/knex @mikro-orm/migrations @mikro-orm/postgresql awilix pg
+
+# Install project dependencies
+# --frozen-lockfile
+
+# Run database migrations
+RUN npm install
+RUN npm run build
+RUN cd ./.medusa/server && npm run predeploy && npm run start
+# RUN npm medusa db:migrate
+# Build the application
+# RUN npm run deploy
+RUN npm run seed
+
+RUN cd ./.medusa/server
 
 
 
@@ -35,4 +30,4 @@ RUN deno run seed
 EXPOSE 9000
 
 # Run the backend service
-CMD ["deno", "run", "--allow-net", "--allow-read", "--allow-env"]
+CMD ["npm", "run", "start"]
