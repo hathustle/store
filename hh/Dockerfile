@@ -4,7 +4,8 @@ FROM node:20-bullseye
 WORKDIR /app
 
 # Copy package files and install dependencies
-COPY . .
+COPY package*.json ./
+RUN --mount=type=cache,target=/app/node_modules npm install
 RUN apt-get update && apt-get install -y python3 python3-pip python-is-python3
 RUN npm install @medusajs/cli --global
 
@@ -14,7 +15,7 @@ RUN npm install @medusajs/cli --global
 # --frozen-lockfile
 
 # Run database migrations
-RUN npm install
+COPY . .
 RUN npm run build
 RUN cd ./.medusa/server && npm run predeploy && npm run start
 
