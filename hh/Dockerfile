@@ -7,6 +7,7 @@ WORKDIR /app
 # Install system dependencies: curl, Python, pip, and required tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
+    unzip \
     python3 \
     python3-pip \
     python-is-python3 \
