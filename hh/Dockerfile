@@ -1,5 +1,5 @@
 # Use the lightweight Debian Bullseye Slim as the base image
-FROM debian:bullseye-slim
+FROM node:20-bullseye-slim
 
 # Set the working directory
 WORKDIR /app
