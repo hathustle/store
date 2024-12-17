@@ -7,20 +7,22 @@ WORKDIR /app
 COPY . .
 RUN apt-get update && apt-get install -y python3 python3-pip python-is-python3
 RUN npm install @medusajs/cli --global
+
 # @mikro-orm/core @mikro-orm/knex @mikro-orm/migrations @mikro-orm/postgresql awilix pg
 
 # Install project dependencies
 # --frozen-lockfile
 
 # Run database migrations
-
+RUN npm run build
+RUN cd ./.medusa/server
+RUN npm install
+RUN npm medusa db:migrate
 # Build the application
-# RUN npm run build
-RUN npm run deploy
+# RUN npm run deploy
 RUN npm run seed
 
 RUN cd ./.medusa/server
-RUN rm -rf node_modules && npm install
 
 
 
