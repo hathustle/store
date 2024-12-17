@@ -5,8 +5,8 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY . .
-RUN npm install @medusajs/cli --global
-
+RUN deno install --global npm:@medusajs/cli
+RUN deno install
 # @mikro-orm/core @mikro-orm/knex @mikro-orm/migrations @mikro-orm/postgresql awilix pg
 
 # Install project dependencies
