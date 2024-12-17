@@ -7,30 +7,29 @@ const DB_HOST = process.env.DB_HOST
 const DB_PORT = process.env.DB_PORT
 const DB_DATABASE = process.env.DB_DATABASE
 
-const REDIS_URL = "redis://default:ZhD9K3uw@hathustle_medusa-redis:6379"
-const DATABASE_URL = "postgres://postgres:FcDBTxd2@hathustle_db:5432/postgres"
-  // `postgres://${DB_USERNAME}:${DB_PASSWORD}` +
-  // `@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`
+const DATABASE_URL =
+  `postgres://${DB_USERNAME}:${DB_PASSWORD}` +
+  `@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`
 
 module.exports = defineConfig({
   modules: [
     {
       resolve: "@medusajs/medusa/cache-redis",
       options: {
-        redisUrl: REDIS_URL, //process.env.REDIS_URL,
+        redisUrl: process.env.REDIS_URL,
       },
     },
     {
       resolve: "@medusajs/medusa/event-bus-redis",
       options: {
-        redisUrl: REDIS_URL || process.env.REDIS_URL,
+        redisUrl: process.env.REDIS_URL,
       },
     },
     {
       resolve: "@medusajs/medusa/workflow-engine-redis",
       options: {
         redis: {
-          url: REDIS_URL || process.env.REDIS_URL,
+          url: process.env.REDIS_URL,
         },
       },
     },
@@ -39,8 +38,8 @@ module.exports = defineConfig({
     disable: process.env.DISABLE_MEDUSA_ADMIN === "true",
   },
   projectConfig: {
-    databaseUrl: DATABASE_URL, //process.env.DATABASE_URL, //: DATABASE_URL,
-    redisUrl: REDIS_URL, // process.env.REDIS_URL,
+    databaseUrl: process.env.DATABASE_URL, //: DATABASE_URL,
+    redisUrl: process.env.REDIS_URL,
     workerMode: process.env.MEDUSA_WORKER_MODE as "shared" | "worker" | "server",
     http: {
       storeCors: process.env.STORE_CORS!,
