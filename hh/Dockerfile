@@ -14,10 +14,10 @@ RUN npm install @medusajs/cli --global
 # --frozen-lockfile
 
 # Run database migrations
-RUN npm run build
-RUN cd ./.medusa/server
 RUN npm install
-RUN npm medusa db:migrate
+RUN npm run build
+RUN cd ./.medusa/server && npm run predeploy && npm run start
+
 # Build the application
 # RUN npm run deploy
 RUN npm run seed
