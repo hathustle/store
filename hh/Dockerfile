@@ -1,23 +1,28 @@
-FROM denoland/deno:latest
+# Use the lightweight Debian Bullseye Slim as the base image
+FROM debian:bullseye-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Install system dependencies: curl, Python, pip, and required tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    python3 \
+    python3-pip \
+    python-is-python3 \
+    ca-certificates \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Deno
+RUN curl -fsSL https://deno.land/x/install/install.sh | sh && \
+    ln -s /root/.deno/bin/deno /usr/local/bin/deno
+
+# Add Deno to PATH
+ENV PATH="/root/.deno/bin:${PATH}"
+
+# Copy the application code
 COPY . .
-RUN deno install --global npm:@medusajs/cli
 RUN deno install
-# @mikro-orm/core @mikro-orm/knex @mikro-orm/migrations @mikro-orm/postgresql awilix pg
-
-# Install project dependencies
-# --frozen-lockfile
-
-# Run database migrations
-# RUN npm install
-# RUN npm run build
-# RUN cd ./.medusa/server && npm run predeploy && npm run start
-# RUN npm medusa db:migrate
-# Build the application
 RUN deno run deploy
 RUN deno run seed
 
