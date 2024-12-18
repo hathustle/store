@@ -5,7 +5,7 @@ services:
     ports:
       - "9000:9000" 
     environment:
-      DATABASE_URL: postgres://DB_USERNAME:$DB_PASSWORD@hathustle_db:5432/hathustle
+      DATABASE_URL: postgres://$DB_USERNAME:$DB_PASSWORD@hathustle_db:5432/hathustle
       REDIS_URL: redis://hathustle_redis:6379
       # MEDUSA_ADMIN_ONBOARDING_TYPE=nextjs
       STORE_CORS: http://localhost:8000,https://docs.medusajs.com
@@ -35,8 +35,8 @@ services:
     image: postgres:16
     container_name: hathustle_db
     environment:
-      POSTGRES_USER: $USER
-      POSTGRES_PASSWORD: $PASSWORD
+      POSTGRES_USER: $DB_USERNAME
+      POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_DB: hathustle
     ports:
       - "5432:5432"
