@@ -1,4 +1,4 @@
-import { loadEnv, defineConfig, Modules } from '@medusajs/framework/utils'
+import { loadEnv, defineConfig, Modules, ModuleRegistrationName } from '@medusajs/framework/utils'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 const DB_USERNAME = process.env.DB_USERNAME
@@ -17,12 +17,14 @@ module.exports = defineConfig({
       resolve: "@medusajs/cache-redis",
       options: {
         redisUrl: process.env.REDIS_URL,
-        key: "medusa-cache"
+        key: ModuleRegistrationName.CACHE,
+        serviceName: 'medusa'
       },
     },
     {
       resolve: "@medusajs/event-bus-redis",
       options: {
+        key: ModuleRegistrationName.EVENT_BUS,
         redisUrl: process.env.REDIS_URL,
       },
     },
@@ -30,6 +32,7 @@ module.exports = defineConfig({
       resolve: "@medusajs/workflow-engine-redis",
       options: {
         redis: {
+          key: ModuleRegistrationName.WORKFLOW_ENGINE,
           url: process.env.REDIS_URL,
         },
       },
