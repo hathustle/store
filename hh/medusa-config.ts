@@ -16,17 +16,21 @@ module.exports = defineConfig({
     {
       resolve: "@medusajs/cache-redis",
       options: {
-        redisUrl: process.env.REDIS_URL,
+        redis: {
         key: ModuleRegistrationName.CACHE,
+        redisUrl: process.env.REDIS_URL,
         serviceName: "cacheService", 
-      },
+      }
+    },
     },
     {
       resolve: "@medusajs/event-bus-redis",
       options: {
-        key: ModuleRegistrationName.EVENT_BUS,
-        redisUrl: process.env.REDIS_URL,
-        serviceName: "eventService", 
+        redis: {
+          key: ModuleRegistrationName.EVENT_BUS,
+          redisUrl: process.env.REDIS_URL,
+          serviceName: "eventService", 
+        }
       },
     },
     {
