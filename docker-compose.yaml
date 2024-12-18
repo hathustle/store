@@ -2,7 +2,7 @@ version: '3.8'
 services:
   medusa:
     build:
-      context: .
+      context: ./hh
     environment:
       DATABASE_URL: postgres://$USER:$PASSWORD@hathustle_db:5432/hathustle
       REDIS_URL: redis://hathustle_redis:6379
