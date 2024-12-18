@@ -18,7 +18,7 @@ RUN cat .env
 RUN npm install
 RUN npm run build
 
-RUN cd ./.medusa/server && yarn predeploy && yarn start
+RUN cd .medusa/server && npm run predeploy && npm run start
 # RUN npm medusa db:migrate
 # Build the application
 # RUN npm run deploy
