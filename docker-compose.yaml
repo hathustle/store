@@ -1,55 +1,36 @@
-version: "3.8"
+version: '3.8'
 services:
-  backend:
+  medusa:
     build:
-      dockerfile: Dockerfile.prod
-    image: backend:latest
-    container_name: medusa-server
-    restart: always
+      context: .
+    environment:
+      DATABASE_URL: postgres://$USER:$PASSWORD@hathustle_db:5432/hathustle
+      REDIS_URL: redis://hathustle_redis:6379
     depends_on:
-      - postgres
-      - redis
+      - hathustle_db
+      - hathustle_redis
+    networks:
+      - medusa-network
+
+  hathustle_db:
+    image: postgres:16
     environment:
-      DATABASE_URL: postgres://postgres:postgres@postgres:5432/medusa-docker
-      NODE_ENV: production
-      STORE_CORS: http://localhost
+      POSTGRES_USER: $USER
+      POSTGRES_PASSWORD: $PASSWORD
+      POSTGRES_DB: hathustle
     ports:
-      - "9000:9000"
+      - "5432:5432"
+    networks:
+      - medusa-network
 
-  postgres:
-    restart: always
-    environment:
-      POSTGRES_USER: $POSTGRES_USER 
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $POSTGRES_DB
-
-  redis:
-    restart: always
-
-  admin:
-    build:
-      context: ./admin
-      dockerfile: Dockerfile.prod
-    image: admin:latest
-    restart: always
-    depends_on:
-      - backend
-    container_name: medusa-admin
-    environment:
-      NODE_ENV: production
-      NODE_OPTIONS: --openssl-legacy-provider
+  hathustle_redis:
+    image: redis:6
     ports:
-      - "7000:80"
+      - "6379:6379"
+    networks:
+      - medusa-network
+    command: ["redis-server", "--appendonly", "yes"]
 
-  storefront:
-    build:
-      dockerfile: Dockerfile.prod
-    image: storefront:latest
-    container_name: medusa-storefront
-    restart: always
-    environment:
-      NODE_ENV: production
-    depends_on:
-      - backend
-    ports:
-      - "80:80"
+networks:
+  medusa-network:
+    driver: bridge
