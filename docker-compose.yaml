@@ -2,9 +2,29 @@ services:
   medusa:
     build:
       context: ./hh
+    ports:
+      - "9000:9000" 
     environment:
-      DATABASE_URL: postgres://$USER:$PASSWORD@hathustle_db:5432/hathustle
+      DATABASE_URL: postgres://DB_USERNAME:$DB_PASSWORD@hathustle_db:5432/hathustle
       REDIS_URL: redis://hathustle_redis:6379
+      # MEDUSA_ADMIN_ONBOARDING_TYPE=nextjs
+      STORE_CORS: http://localhost:8000,https://docs.medusajs.com
+      ADMIN_CORS: http://localhost:5173,http://localhost:9000,https://docs.medusajs.com
+      AUTH_CORS: http://localhost:5173,http://localhost:9000,https://docs.medusajs.com
+      JWT_SECRET: $JWT_SECRET
+      COOKIE_SECRET: $COOKIE_SECRET
+      DB_USERNAME: $DB_USERNAME
+      DB_PASSWORD: $DB_PASSWORD #MGF6mE2R
+      DB_HOST: $DB_HOST #hathustle_db
+      DB_PORT: $DB_PORT #5432
+      DB_DATABASE: $DB_DATABASE #hathustle
+      NPM_CONFIG_PRODUCTION: false
+      YARN_PRODUCTION: false
+      NODE_ENV: $NODE_ENV production
+      DISABLE_MEDUSA_ADMIN: false
+      MEDUSA_WORKER_MODE: server
+      PORT: 9000
+      # PORT=80
     depends_on:
       - hathustle_db
       - hathustle_redis
@@ -13,6 +33,7 @@ services:
 
   hathustle_db:
     image: postgres:16
+    container_name: hathustle_db
     environment:
       POSTGRES_USER: $USER
       POSTGRES_PASSWORD: $PASSWORD
@@ -24,6 +45,7 @@ services:
 
   hathustle_redis:
     image: redis:6
+    container_name: hathustle_redis
     ports:
       - "6379:6379"
     networks:
