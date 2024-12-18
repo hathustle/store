@@ -18,7 +18,7 @@ module.exports = defineConfig({
       options: {
         redisUrl: process.env.REDIS_URL,
         key: ModuleRegistrationName.CACHE,
-        serviceName: 'medusa'
+        serviceName: "cacheService", 
       },
     },
     {
@@ -26,6 +26,7 @@ module.exports = defineConfig({
       options: {
         key: ModuleRegistrationName.EVENT_BUS,
         redisUrl: process.env.REDIS_URL,
+        serviceName: "eventService", 
       },
     },
     {
@@ -34,6 +35,7 @@ module.exports = defineConfig({
         redis: {
           key: ModuleRegistrationName.WORKFLOW_ENGINE,
           url: process.env.REDIS_URL,
+          serviceName: "workflowService", 
         },
       },
     },
