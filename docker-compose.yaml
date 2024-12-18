@@ -27,7 +27,7 @@ services:
       # PORT=80
     depends_on:
       - hathustle_db
-      - hathustle_redis
+      # - hathustle_redis
     networks:
       - medusa-network
 
