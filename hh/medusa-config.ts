@@ -14,19 +14,19 @@ const DATABASE_URL =
 module.exports = defineConfig({
   modules: [
     {
-      resolve: "@medusajs/medusa/cache-redis",
+      resolve: "@medusajs/cache-redis",
       options: {
         redisUrl: process.env.REDIS_URL,
       },
     },
     {
-      resolve: "@medusajs/medusa/event-bus-redis",
+      resolve: "@medusajs/event-bus-redis",
       options: {
         redisUrl: process.env.REDIS_URL,
       },
     },
     {
-      resolve: "@medusajs/medusa/workflow-engine-redis",
+      resolve: "@medusajs/workflow-engine-redis",
       options: {
         redis: {
           url: process.env.REDIS_URL,
