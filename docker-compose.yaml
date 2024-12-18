@@ -42,15 +42,22 @@ services:
       - "5432:5432"
     networks:
       - medusa-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-  hathustle_redis:
-    image: redis:6
-    container_name: hathustle_redis
-    ports:
-      - "6379:6379"
-    networks:
-      - medusa-network
-    command: ["redis-server", "--appendonly", "yes"]
+  # hathustle_redis:
+  #   image: redis:6
+  #   container_name: hathustle_redis
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - medusa-network
+  #   command: ["redis-server", "--appendonly", "yes"]
+  #   volumes:
+  #     - ./redis.conf:/usr/local/etc/redis/redis.conf
+  #   environment:
+  #     REDIS_USER: $DB_USERNAME
+  #     REDIS_PASSWORD: $DB_PASSWORD
 
 networks:
   medusa-network:
