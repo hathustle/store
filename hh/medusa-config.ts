@@ -15,31 +15,27 @@ module.exports = defineConfig({
   modules: [
     {
       resolve: "@medusajs/cache-redis",
+      key: ModuleRegistrationName.CACHE,
       options: {
-        redis: {
-        key: ModuleRegistrationName.CACHE,
         redisUrl: process.env.REDIS_URL,
-        serviceName: "cacheService", 
-      }
-    },
+        // serviceName: "cacheService", 
+      },
     },
     {
       resolve: "@medusajs/event-bus-redis",
+      key: ModuleRegistrationName.EVENT_BUS,
       options: {
-        redis: {
-          key: ModuleRegistrationName.EVENT_BUS,
-          redisUrl: process.env.REDIS_URL,
-          serviceName: "eventService", 
-        }
+        redisUrl: process.env.REDIS_URL,
+        // serviceName: "eventService", 
       },
     },
     {
       resolve: "@medusajs/workflow-engine-redis",
+      key: ModuleRegistrationName.WORKFLOW_ENGINE,
       options: {
         redis: {
-          key: ModuleRegistrationName.WORKFLOW_ENGINE,
           url: process.env.REDIS_URL,
-          serviceName: "workflowService", 
+          // serviceName: "workflowService", 
         },
       },
     },
