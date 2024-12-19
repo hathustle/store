@@ -12,12 +12,12 @@ RUN npm install @medusajs/medusa-cli --global
 
 # Install project dependencies
 # --frozen-lockfile
-RUN echo $REDIS_URL
-RUN cat .env
+# RUN echo $REDIS_URL
+# RUN cat .env
 # Run database migrations
 RUN npm install
 RUN npm run build
-RUN cp .env .medusa/server/.env
+# RUN cp .env .medusa/server/.env
 RUN cd .medusa/server && npm run predeploy && npm run start
 # RUN npm medusa db:migrate
 # Build the application
