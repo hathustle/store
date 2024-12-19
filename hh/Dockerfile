@@ -20,7 +20,7 @@ RUN npm run build
 RUN cp .env .medusa/server/.env
 
 RUN cd .medusa/server 
-RUN medusa migrations
+RUN medusa migrations run --verbose
 # RUN npm medusa db:migrate
 # Build the application
 # RUN npm run deploy
