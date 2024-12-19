@@ -19,7 +19,7 @@ RUN npm install
 RUN npm run build
 RUN cp .env .medusa/server/.env
 
-RUN cd .medusa/server && npm run predeploy && npm run start
+RUN cd .medusa/server && npm run predeploy
 # RUN npm medusa db:migrate
 # Build the application
 # RUN npm run deploy
@@ -32,4 +32,4 @@ RUN yarn seed
 EXPOSE 9000
 
 # Run the backend service
-CMD ["sleep", "infinity"]
+CMD ["npm", "run", "start"]
