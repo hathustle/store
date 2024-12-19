@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy package files and install dependencies
 COPY . .
 RUN apt-get update && apt-get install -y python3 python3-pip python-is-python3
-RUN npm install @medusajs/cli --global
+RUN npm install @medusajs/medusa-cli --global
 
 # @mikro-orm/core @mikro-orm/knex @mikro-orm/migrations @mikro-orm/postgresql awilix pg
 
@@ -19,17 +19,15 @@ RUN npm install
 RUN npm run build
 RUN cp .env .medusa/server/.env
 
-RUN cd .medusa/server && npm run predeploy
+RUN cd .medusa/server 
+RUN medusa migrations
 # RUN npm medusa db:migrate
 # Build the application
 # RUN npm run deploy
 RUN yarn seed
 
-
-
-
 # Expose the backend service port
 EXPOSE 9000
 
 # Run the backend service
-CMD ["npm", "run", "start"]
+CMD run && medusa start
