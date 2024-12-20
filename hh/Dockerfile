@@ -12,6 +12,11 @@ RUN npm install --production
 # Copy the rest of the application code
 COPY . ./
 
+# Build the application
+RUN npm run build
+
+WORKDIR /usr/src/app/.medusa/server
+
 # Expose the port Medusa will run on
 EXPOSE 9000
 
@@ -19,4 +24,4 @@ EXPOSE 9000
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl --fail http://localhost:9000/health || exit 1
 
 # Command to start the MedusaJS application
-CMD ["sh", "-c", "npm run migration:run && npm run start"]
+CMD ["sh", "-c", "npm run predeploy && npm run start"]
