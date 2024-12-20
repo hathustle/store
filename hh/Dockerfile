@@ -15,7 +15,7 @@ COPY . ./
 # Build the application
 RUN npm run build
 
-WORKDIR /usr/src/app/.medusa/server
+RUN cd .medusa/server
 
 # Expose the port Medusa will run on
 EXPOSE 9000
