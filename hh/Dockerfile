@@ -19,4 +19,4 @@ EXPOSE 9000
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl --fail http://localhost:9000/health || exit 1
 
 # Command to start the MedusaJS application
-CMD ["npm", "run", "start"]
+CMD ["sh", "-c", "npm run migration:run && npm run start"]
