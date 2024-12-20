@@ -1,35 +1,23 @@
-FROM node:20-bullseye
+# Base image for Node.js
+FROM node:18-alpine
 
-# Set the working directory
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-# Copy package files and install dependencies
-COPY . .
-RUN apt-get update && apt-get install -y python3 python3-pip python-is-python3
-RUN npm install @medusajs/medusa-cli --global
+# Copy package.json and package-lock.json into the container
+COPY package*.json ./
 
-# @mikro-orm/core @mikro-orm/knex @mikro-orm/migrations @mikro-orm/postgresql awilix pg
+# Install dependencies
+RUN npm install --production
 
-# Install project dependencies
-# --frozen-lockfile
-# RUN echo $REDIS_URL
-# RUN cat .env
-# Run database migrations
-RUN npm install
-RUN npm run build
-RUN cp .env .medusa/server/.env
+# Copy the rest of the application code
+COPY . ./
 
-RUN cd .medusa/server
-RUN npm install
-RUN medusa migrations --verbose --action run
-RUN npm run seed
-
-# RUN npm medusa db:migrate
-# Build the application
-# RUN npm run deploy
-
-# Expose the backend service port
+# Expose the port Medusa will run on
 EXPOSE 9000
 
-# Run the backend service
-CMD run && medusa start
+# Add a healthcheck for the container
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl --fail http://localhost:9000/health || exit 1
+
+# Command to start the MedusaJS application
+CMD ["npm", "run", "start"]
