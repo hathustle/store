@@ -16,7 +16,7 @@ RUN mkdir -p /var/lib/postgresql/data && \
 # Traefik Labels for SSL Management
 LABEL "traefik.enable"="true"
 LABEL "traefik.tcp.routers.postgres.rule"="HostSNI(`postgres.internal`)"
-LABEL "traefik.tcp.routers.postgres.entrypoints"="websecure"
+LABEL "traefik.tcp.routers.postgres.entrypoints"="https"
 LABEL "traefik.tcp.routers.postgres.tls"="true"
 LABEL "traefik.tcp.services.postgres.loadbalancer.server.port"="5432"
 

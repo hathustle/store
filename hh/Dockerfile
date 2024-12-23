@@ -13,7 +13,7 @@ RUN npm install --production
 COPY . ./
 
 # Copy SSL certificate from the host machine (outside Git)
-COPY certs/postgres.crt /usr/local/share/ca-certificates/postgres.crt
+COPY /etc/easypanel/projects/admin/files/0.txt /usr/local/share/ca-certificates/postgres.crt
 
 # Update CA certificates
 RUN update-ca-certificates
