@@ -12,6 +12,12 @@ RUN npm install --production
 # Copy the rest of the application code
 COPY . ./
 
+# Copy SSL certificate from the host machine (outside Git)
+COPY /etc/traefik/certs/postgres.crt /usr/local/share/ca-certificates/postgres.crt
+
+# Update CA certificates
+RUN update-ca-certificates
+
 # Build the application
 RUN npm run build
 
