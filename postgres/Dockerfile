@@ -24,5 +24,17 @@ RUN chmod +x /usr/local/bin/rotate-cert.sh
 RUN echo "0 0 1 */3 * /usr/local/bin/rotate-cert.sh" >> /etc/crontab
 
 # Start cron and Postgres
-CMD service cron start && docker-entrypoint.sh postgres
+# Conditionally clear data directory
+ARG CLEAR_DB=false
+RUN if [ "$CLEAR_DB" = "true" ]; then \
+    echo "Clearing Postgres data directory..."; \
+    rm -rf /var/lib/postgresql/data/*; \
+    fi
+
+# Set up permissions and initialization
+RUN mkdir -p /var/lib/postgresql/data && \
+    chown -R postgres:postgres /var/lib/postgresql/data && \
+    docker-entrypoint.sh
+    
+CMD [ "postgres" ]
 EXPOSE 5432
