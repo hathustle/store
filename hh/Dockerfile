@@ -13,7 +13,7 @@ RUN npm install --production
 COPY . ./
 
 # Copy SSL certificate from the host machine (outside Git)
-COPY /postgres.crt /usr/local/share/ca-certificates/postgres.crt
+COPY /files/postgres.crt /usr/local/share/ca-certificates/postgres.crt
 
 # Update CA certificates
 RUN update-ca-certificates
