@@ -7,7 +7,9 @@ COPY postgres-ssl-init.sh /usr/local/bin/postgres-ssl-init.sh
 RUN chmod +x /usr/local/bin/postgres-ssl-init.sh
 
 # Ensure the data directory exists with correct permissions
-RUN mkdir -p /var/lib/postgresql/data && \
+RUN if [ ! -d "/var/lib/postgresql/data" ]; then \
+      mkdir -p /var/lib/postgresql/data; \
+    fi && \
     chown -R postgres:postgres /var/lib/postgresql/data
 
 # Traefik Labels for SSL Passthrough

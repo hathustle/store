@@ -1,33 +1,50 @@
 #!/bin/bash
 
-SSL_CERTS_DIR="/usr/local/share/ca-certificates"
+# Define directories for SSL certificates
+TRAFFIC_CERTS_DIR="/usr/local/share/ca-certificates"
 SSL_TARGET_DIR="/etc/postgresql/ssl"
 
-# Validate certificates
-# [ ! -f "$SSL_CERTS_DIR/ca.crt" ] ||
-if [ ! -f "$SSL_CERTS_DIR/postgres.crt" ] || [ ! -f "$SSL_CERTS_DIR/postgres.key" ]; then
-    echo "Error: Missing SSL certificate files in $SSL_CERTS_DIR"
+# Ensure the target directory exists
+mkdir -p "$SSL_TARGET_DIR"
+
+# Check and copy Traefik certificates
+if [ ! -f "$TRAFFIC_CERTS_DIR/server.crt" ] || [ ! -f "$TRAFFIC_CERTS_DIR/server.key" ]; then
+    echo "Error: SSL certificate files not found in $TRAFFIC_CERTS_DIR"
     exit 1
+else
+    echo "Copying certificates from Traefik directory to PostgreSQL SSL directory..."
+    cp "$TRAFFIC_CERTS_DIR/server.crt" "$SSL_TARGET_DIR/server.crt"
+    cp "$TRAFFIC_CERTS_DIR/server.key" "$SSL_TARGET_DIR/server.key"
 fi
 
-# Copy certificates
-mkdir -p "$SSL_TARGET_DIR"
-# cp "$SSL_CERTS_DIR/ca.crt" "$SSL_TARGET_DIR/ca.crt"
-cp "$SSL_CERTS_DIR/postgres.crt" "$SSL_TARGET_DIR/postgres.crt"
-cp "$SSL_CERTS_DIR/postgres.key" "$SSL_TARGET_DIR/postgres.key"
-
-# Set permissions
-chmod 600 "$SSL_TARGET_DIR/postgres.key"
+# Set permissions for PostgreSQL to access the certificates
+chmod 600 "$SSL_TARGET_DIR/server.key"
 chown -R postgres:postgres "$SSL_TARGET_DIR"
 
-# Initialize database if necessary
+# Check if the database is already initialized
 if [ -z "$(ls -A /var/lib/postgresql/data)" ]; then
-    echo "Initializing database cluster..."
-    initdb -D /var/lib/postgresql/data
+    echo "Initializing database cluster with SSL enabled..."
+    initdb -D /var/lib/postgresql/data \
+        --pwfile=<(echo $POSTGRES_PASSWORD) \
+        --auth-host=md5 \
+        --auth-local=peer
 else
     echo "Data directory exists and is not empty, skipping initdb."
 fi
 
-# Start Postgres
-exec docker-entrypoint.sh postgres
+# Enable SSL in PostgreSQL configuration
+POSTGRES_CONF="/var/lib/postgresql/data/postgresql.conf"
+if [ ! -f "$POSTGRES_CONF" ]; then
+    echo "Error: PostgreSQL configuration file not found at $POSTGRES_CONF"
+    exit 1
+fi
 
+echo "Configuring PostgreSQL to enable SSL..."
+cat >> "$POSTGRES_CONF" <<EOF
+ssl = on
+ssl_cert_file = '$SSL_TARGET_DIR/server.crt'
+ssl_key_file = '$SSL_TARGET_DIR/server.key'
+EOF
+
+# Start PostgreSQL
+exec docker-entrypoint.sh postgres
