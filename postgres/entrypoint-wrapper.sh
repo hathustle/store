@@ -9,10 +9,14 @@ if [ -f "/usr/local/share/ca-certificates/postgres.crt" ] && \
     chown postgres:postgres /usr/local/share/ca-certificates/postgres.*
     chmod 600 /usr/local/share/ca-certificates/postgres.key
 
-    # Apply SSL config to existing Postgres installation
-    echo "ssl = on" >> /var/lib/postgresql/data/postgresql.conf
-    echo "ssl_cert_file = '/usr/local/share/ca-certificates/postgres.crt'" >> /var/lib/postgresql/data/postgresql.conf
-    echo "ssl_key_file = '/usr/local/share/ca-certificates/postgres.key'" >> /var/lib/postgresql/data/postgresql.conf
+    # Replace postgresql.conf instead of appending
+    echo "Enabling SSL in Postgres configuration..."
+    cat <<EOF > /var/lib/postgresql/data/postgresql.conf
+ssl = on
+ssl_cert_file = '/usr/local/share/ca-certificates/postgres.crt'
+ssl_key_file = '/usr/local/share/ca-certificates/postgres.key'
+EOF
+
 else
     echo "SSL certificates not found. Skipping SSL configuration."
 fi
