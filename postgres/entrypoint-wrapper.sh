@@ -1,4 +1,11 @@
 #!/bin/bash
+echo "Checking for database initialization..."
+
+# Clear Postgres data directory if CLEAR_DB is set
+if [ "$CLEAR_DB" = "true" ]; then
+    echo "CLEAR_DB is true. Removing existing Postgres data..."
+    rm -rf /var/lib/postgresql/data/*
+fi
 
 echo "Configuring SSL certificates for Postgres..."
 

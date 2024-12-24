@@ -2,13 +2,6 @@ FROM postgres:17
 
 RUN apt-get update && apt-get install -y openssl cron
 
-# Conditionally clear data directory
-ARG CLEAR_DB=false
-RUN if [ "$CLEAR_DB" = "true" ]; then \
-    echo "Clearing Postgres data directory..."; \
-    rm -rf /var/lib/postgresql/data/*; \
-    fi
-
 # Copy SSL certs to a Postgres-owned directory (server-certs)
 RUN mkdir -p /var/lib/postgresql/server-certs
 
