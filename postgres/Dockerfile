@@ -12,8 +12,8 @@ RUN if [ "$CLEAR_DB" = "true" ]; then \
 # Copy SSL certs to a Postgres-owned directory (server-certs)
 RUN mkdir -p /var/lib/postgresql/server-certs
 
-COPY /etc/traefik/certs/postgres.crt /var/lib/postgresql/server-certs/server.crt
-COPY /etc/traefik/certs/postgres.key /var/lib/postgresql/server-certs/server.key
+COPY /usr/local/share/ca-certificates/postgres.crt /var/lib/postgresql/server-certs/server.crt
+COPY /usr/local/share/ca-certificates/postgres.key /var/lib/postgresql/server-certs/server.key
 
 # Set permissions as root during build (avoiding runtime issues)
 RUN chown -R postgres:postgres /var/lib/postgresql/server-certs && \
