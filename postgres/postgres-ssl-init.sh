@@ -22,7 +22,7 @@ chown -R postgres:postgres "$SSL_TARGET_DIR"
 # Check if the database is already initialized
 if [ -z "$(ls -A /var/lib/postgresql/data)" ]; then
     echo "Initializing database cluster with SSL enabled..."
-    su - postgres -c "initdb -D /var/lib/postgresql/data \
+    su - postgres -c "/usr/lib/postgresql/17/bin/initdb -D /var/lib/postgresql/data \
         --pwfile=<(echo $POSTGRES_PASSWORD) \
         --auth-host=md5 \
         --auth-local=peer"
