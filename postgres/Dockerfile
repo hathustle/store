@@ -13,6 +13,10 @@ RUN if [ "$CLEAR_DB" = "true" ]; then \
 RUN mkdir -p /var/lib/postgresql/data && \
     chown -R postgres:postgres /var/lib/postgresql/data
 
+COPY postgres-init.sh /docker-entrypoint-initdb.d/postgres-init.sh
+RUN chmod +x /docker-entrypoint-initdb.d/postgres-init.sh
+    
+
 # Traefik Labels for SSL Management
 LABEL "traefik.enable"="true"
 LABEL "traefik.http.routers.medusa.rule"="Host(`hathustle-store-backend.eqmyej.easypanel.host`)"

@@ -1,4 +1,6 @@
 import { loadEnv, defineConfig, ModuleRegistrationName } from '@medusajs/framework/utils'
+import fs from 'node:fs'
+import path from 'node:path'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
@@ -45,8 +47,11 @@ module.exports = defineConfig({
     databaseDriverOptions: {
         connection: {
             ssl: {
-                rejectUnauthorized: false
-            }
+                rejectUnauthorized: false,
+                ca: fs.existsSync(
+                  path.join(__dirname, process.env.DATABASE_SSL_CERT || '')
+                ),
+            } as any
         }
       }
   }
