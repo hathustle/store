@@ -1,25 +1,33 @@
 #!/bin/bash
 
-# Link certificates to Postgres SSL directory
-SSL_DIR="/etc/postgresql/ssl"
-CERTS_DIR="/usr/local/share/ca-certificates"
+SSL_CERTS_DIR="/usr/local/share/ca-certificates"
+SSL_TARGET_DIR="/etc/postgresql/ssl"
 
-mkdir -p "$SSL_DIR"
-cp "$CERTS_DIR/postgres.crt" "$SSL_DIR/postgres.crt"
-cp "$CERTS_DIR/postgres.key" "$SSL_DIR/postgres.key"
-cp "$CERTS_DIR/ca.crt" "$SSL_DIR/ca.crt"
+# Validate certificates
+# [ ! -f "$SSL_CERTS_DIR/ca.crt" ] ||
+if [ ! -f "$SSL_CERTS_DIR/postgres.crt" ] || [ ! -f "$SSL_CERTS_DIR/postgres.key" ]; then
+    echo "Error: Missing SSL certificate files in $SSL_CERTS_DIR"
+    exit 1
+fi
 
-# Set correct permissions for Postgres to use the certificates
-chmod 600 "$SSL_DIR/postgres.key"
-chown -R postgres:postgres "$SSL_DIR"
+# Copy certificates
+mkdir -p "$SSL_TARGET_DIR"
+# cp "$SSL_CERTS_DIR/ca.crt" "$SSL_TARGET_DIR/ca.crt"
+cp "$SSL_CERTS_DIR/postgres.crt" "$SSL_TARGET_DIR/postgres.crt"
+cp "$SSL_CERTS_DIR/postgres.key" "$SSL_TARGET_DIR/postgres.key"
 
-# Update postgresql.conf for SSL
-cat >> /var/lib/postgresql/data/postgresql.conf <<EOF
-ssl = 'on'
-ssl_cert_file = '$SSL_DIR/postgres.crt'
-ssl_key_file = '$SSL_DIR/postgres.key'
-ssl_ca_file = '$SSL_DIR/ca.crt'
-EOF
+# Set permissions
+chmod 600 "$SSL_TARGET_DIR/postgres.key"
+chown -R postgres:postgres "$SSL_TARGET_DIR"
+
+# Initialize database if necessary
+if [ -z "$(ls -A /var/lib/postgresql/data)" ]; then
+    echo "Initializing database cluster..."
+    initdb -D /var/lib/postgresql/data
+else
+    echo "Data directory exists and is not empty, skipping initdb."
+fi
 
 # Start Postgres
 exec docker-entrypoint.sh postgres
+
