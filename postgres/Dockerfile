@@ -12,7 +12,8 @@ RUN if [ "$CLEAR_DB" = "true" ]; then \
     fi
 
 # Copy SSL init script
-COPY postgres-init-sh .
+COPY postgres-ssl-init /usr/local/bin/postgres-ssl-init
+RUN chmod +x /usr/local/bin/postgres-ssl-init
 
 # Ensure the data directory exists with correct permissions
 RUN mkdir -p /var/lib/postgresql/data && \
