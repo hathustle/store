@@ -1,6 +1,6 @@
 #!/bin/bash
-
-SL_TARGET_DIR="/etc/postgresql/ssl"
+TRAFFIC_CERTS_DIR="/usr/local/share/ca-certificates/"
+SSL_TARGET_DIR="/etc/postgresql/ssl"
 
 # Ensure the target directory exists
 mkdir -p "$SSL_TARGET_DIR"
