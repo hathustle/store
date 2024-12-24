@@ -1,30 +1,27 @@
 #!/bin/bash
 
-echo "Starting SSL configuration for PostgreSQL..."
+echo "Configuring SSL for Postgres..."
 
-CERT_DIR="/usr/local/share/ca-certificates"
-CONF_DIR="/var/lib/postgresql/data"
-CONF_FILE="${CONF_DIR}/postgresql.conf"
-CERT_FILE="${CERT_DIR}/postgres.crt"
-KEY_FILE="${CERT_DIR}/postgres.key"
+CONF_FILE="/var/lib/postgresql/data/postgresql.conf"
+CERT_FILE="/usr/local/share/ca-certificates/postgres.crt"
+KEY_FILE="/usr/local/share/ca-certificates/postgres.key"
 
-# Verify if certs exist
+# Ensure cert files exist
 if [ ! -f "$CERT_FILE" ] || [ ! -f "$KEY_FILE" ]; then
-    echo "ERROR: SSL certificates not found in $CERT_DIR"
+    echo "SSL certificates not found!"
     exit 1
 fi
 
-# Apply permissions to certs
-echo "Applying permissions to SSL certificates..."
-chown postgres:postgres "$CERT_FILE" "$KEY_FILE"
-chmod 600 "$KEY_FILE"
+# Remove existing SSL configurations
+sed -i '/^ssl =/d' "$CONF_FILE"
+sed -i '/^ssl_cert_file =/d' "$CONF_FILE"
+sed -i '/^ssl_key_file =/d' "$CONF_FILE"
 
-# Enable SSL in postgresql.conf
-echo "Configuring SSL in postgresql.conf..."
+# Add new SSL configurations at the end of the file
 cat <<EOF >> "$CONF_FILE"
 ssl = on
 ssl_cert_file = '$CERT_FILE'
 ssl_key_file = '$KEY_FILE'
 EOF
 
-echo "SSL configuration complete. Restart PostgreSQL to apply changes."
+echo "SSL configuration updated. Restart Postgres to apply changes."
