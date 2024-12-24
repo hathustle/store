@@ -9,6 +9,12 @@ RUN if [ "$CLEAR_DB" = "true" ]; then \
     rm -rf /var/lib/postgresql/data/*; \
     fi
 
+# Copy SSL certs to a Postgres-owned directory
+RUN mkdir -p /var/lib/postgresql/server-certs
+COPY /etc/traefik/certs/postgres.crt /var/lib/postgresql/server-certs/server.crt
+COPY /etc/traefik/certs/postgres.key /var/lib/postgresql/server-certs/server.key
+RUN chown -R postgres:postgres /var/lib/postgresql/server-certs && chmod 600 /var/lib/postgresql/server-certs/server.key
+
 # Ensure proper permissions for the Postgres data directory
 RUN mkdir -p /var/lib/postgresql/data && \
     chown -R postgres:postgres /var/lib/postgresql/data
@@ -17,12 +23,12 @@ COPY postgres-init.sh /docker-entrypoint-initdb.d/postgres-init.sh
 RUN chmod +x /docker-entrypoint-initdb.d/postgres-init.sh
     
 
-# Traefik Labels for SSL Management
+# Traefik Labels for Postgres SSL Passthrough
 LABEL "traefik.enable"="true"
-LABEL "traefik.http.routers.medusa.rule"="Host(`hathustle-store-backend.eqmyej.easypanel.host`)"
-LABEL "traefik.http.routers.medusa.entrypoints"="https"
-LABEL "traefik.http.routers.medusa.tls.certresolver"="le"
-LABEL "traefik.http.services.medusa.loadbalancer.server.port"="9000"
+LABEL "traefik.tcp.routers.postgres.rule"="HostSNI(`postgres.internal`)"
+LABEL "traefik.tcp.routers.postgres.entrypoints"="https"
+LABEL "traefik.tcp.routers.postgres.tls"="true"
+LABEL "traefik.tcp.services.postgres.loadbalancer.server.port"="5432"
 
 EXPOSE 5432
 
