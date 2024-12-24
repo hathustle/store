@@ -1,8 +1,4 @@
-#!/bin/bash
-
-# Define directories for SSL certificates
-TRAFFIC_CERTS_DIR="/usr/local/share/ca-certificates"
-SSL_TARGET_DIR="/etc/postgresql/ssl"
+SL_TARGET_DIR="/etc/postgresql/ssl"
 
 # Ensure the target directory exists
 mkdir -p "$SSL_TARGET_DIR"
@@ -24,10 +20,10 @@ chown -R postgres:postgres "$SSL_TARGET_DIR"
 # Check if the database is already initialized
 if [ -z "$(ls -A /var/lib/postgresql/data)" ]; then
     echo "Initializing database cluster with SSL enabled..."
-    initdb -D /var/lib/postgresql/data \
+    su - postgres -c "initdb -D /var/lib/postgresql/data \
         --pwfile=<(echo $POSTGRES_PASSWORD) \
         --auth-host=md5 \
-        --auth-local=peer
+        --auth-local=peer"
 else
     echo "Data directory exists and is not empty, skipping initdb."
 fi
@@ -40,11 +36,9 @@ if [ ! -f "$POSTGRES_CONF" ]; then
 fi
 
 echo "Configuring PostgreSQL to enable SSL..."
-cat >> "$POSTGRES_CONF" <<EOF
-ssl = on
-ssl_cert_file = '$SSL_TARGET_DIR/server.crt'
-ssl_key_file = '$SSL_TARGET_DIR/server.key'
-EOF
+su - postgres -c "echo \"ssl = on\" >> $POSTGRES_CONF"
+su - postgres -c "echo \"ssl_cert_file = '$SSL_TARGET_DIR/server.crt'\" >> $POSTGRES_CONF"
+su - postgres -c "echo \"ssl_key_file = '$SSL_TARGET_DIR/server.key'\" >> $POSTGRES_CONF"
 
 # Start PostgreSQL
 exec docker-entrypoint.sh postgres
