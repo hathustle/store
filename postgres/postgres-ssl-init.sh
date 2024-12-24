@@ -1,27 +1,25 @@
 #!/bin/bash
 
-echo "Configuring SSL for Postgres..."
+# Link certificates to Postgres SSL directory
+SSL_DIR="/etc/postgresql/ssl"
+CERTS_DIR="/usr/local/share/ca-certificates"
 
-CONF_FILE="/var/lib/postgresql/data/postgresql.conf"
-CERT_FILE="/usr/local/share/ca-certificates/postgres.crt"
-KEY_FILE="/usr/local/share/ca-certificates/postgres.key"
+mkdir -p "$SSL_DIR"
+cp "$CERTS_DIR/server.crt" "$SSL_DIR/server.crt"
+cp "$CERTS_DIR/server.key" "$SSL_DIR/server.key"
+cp "$CERTS_DIR/ca.crt" "$SSL_DIR/ca.crt"
 
-# Ensure cert files exist
-if [ ! -f "$CERT_FILE" ] || [ ! -f "$KEY_FILE" ]; then
-    echo "SSL certificates not found!"
-    exit 1
-fi
+# Set correct permissions for Postgres to use the certificates
+chmod 600 "$SSL_DIR/server.key"
+chown -R postgres:postgres "$SSL_DIR"
 
-# Remove existing SSL configurations
-sed -i '/^ssl =/d' "$CONF_FILE"
-sed -i '/^ssl_cert_file =/d' "$CONF_FILE"
-sed -i '/^ssl_key_file =/d' "$CONF_FILE"
-
-# Add new SSL configurations at the end of the file
-cat <<EOF >> "$CONF_FILE"
-ssl = on
-ssl_cert_file = '$CERT_FILE'
-ssl_key_file = '$KEY_FILE'
+# Update postgresql.conf for SSL
+cat >> /var/lib/postgresql/data/postgresql.conf <<EOF
+ssl = 'on'
+ssl_cert_file = '$SSL_DIR/server.crt'
+ssl_key_file = '$SSL_DIR/server.key'
+ssl_ca_file = '$SSL_DIR/ca.crt'
 EOF
 
-echo "SSL configuration updated. Restart Postgres to apply changes."
+# Start Postgres
+exec docker-entrypoint.sh postgres
