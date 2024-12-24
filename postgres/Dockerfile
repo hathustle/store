@@ -15,11 +15,10 @@ RUN mkdir -p /var/lib/postgresql/data && \
 
 # Traefik Labels for SSL Management
 LABEL "traefik.enable"="true"
-LABEL "traefik.tcp.routers.postgres.rule"="HostSNI(`postgres.internal`)"
-LABEL "traefik.tcp.routers.postgres.entrypoints"="https"
-LABEL "traefik.tcp.routers.postgres.tls"="true"
-LABEL "traefik.tcp.services.postgres.loadbalancer.server.port"="5432"
-
+LABEL "traefik.http.routers.medusa.rule"="Host(`hathustle-store-backend.eqmyej.easypanel.host`)"
+LABEL "traefik.http.routers.medusa.entrypoints"="https"
+LABEL "traefik.http.routers.medusa.tls.certresolver"="le"
+LABEL "traefik.http.services.medusa.loadbalancer.server.port"="9000"
 
 EXPOSE 5432
 
