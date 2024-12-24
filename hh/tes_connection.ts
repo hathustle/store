@@ -1,7 +1,7 @@
 const { Client } = require('pg');
 
-// Use environment variable or fallback to a default (optional)
-const connectionString = process.env.DATABASE_URL || 'postgres://postgres:yourpassword@hathustle-pg-db:5432/medusadb?sslmode=disable';
+// Get connection string from command line args or default
+const connectionString = process.argv[2] || 'postgres://postgres:yourpassword@hathustle-pg-db:5432/medusadb?sslmode=disable';
 
 const client = new Client({
   connectionString,
