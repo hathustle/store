@@ -15,6 +15,7 @@ COPY . ./
 # Update CA certificates
 RUN update-ca-certificates
 COPY .env ./.medusa/server/.env
+
 # Build the application
 RUN npm run build
 
@@ -25,4 +26,5 @@ EXPOSE 9000
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 CMD curl --fail http://localhost:9000/health || exit 1
 
 # Command to start the MedusaJS application
-CMD ["sh", "-c", "cd ./.medusa/server && npm run start"]
+CMD ["bash"] 
+# cd ./.medusa/server && npm run predeploy && npm run start
