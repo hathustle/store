@@ -12,20 +12,13 @@ RUN if [ "$CLEAR_DB" = "true" ]; then \
 # Copy SSL certs to a Postgres-owned directory (server-certs)
 RUN mkdir -p /var/lib/postgresql/server-certs
 
-COPY /usr/local/share/ca-certificates/postgres.crt /var/lib/postgresql/server-certs/server.crt
-COPY /usr/local/share/ca-certificates/postgres.key /var/lib/postgresql/server-certs/server.key
-
-# Set permissions as root during build (avoiding runtime issues)
-RUN chown -R postgres:postgres /var/lib/postgresql/server-certs && \
-    chmod 600 /var/lib/postgresql/server-certs/server.key
+# Entrypoint wrapper to set permissions at runtime
+COPY entrypoint-wrapper.sh /usr/local/bin/entrypoint-wrapper.sh
+RUN chmod +x /usr/local/bin/entrypoint-wrapper.sh
 
 # Ensure proper permissions for the Postgres data directory
 RUN mkdir -p /var/lib/postgresql/data && \
     chown -R postgres:postgres /var/lib/postgresql/data
-
-# Copy init script and set permissions
-COPY postgres-init.sh /docker-entrypoint-initdb.d/postgres-init.sh
-RUN chmod +x /docker-entrypoint-initdb.d/postgres-init.sh
 
 # Traefik Labels for Postgres SSL Passthrough
 LABEL "traefik.enable"="true"
@@ -36,4 +29,5 @@ LABEL "traefik.tcp.services.postgres.loadbalancer.server.port"="5432"
 
 EXPOSE 5432
 
+ENTRYPOINT ["/usr/local/bin/entrypoint-wrapper.sh"]
 CMD ["postgres"]
