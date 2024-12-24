@@ -14,10 +14,11 @@ COPY . ./
 
 # Update CA certificates
 RUN update-ca-certificates
-COPY .env ./.medusa/server/.env
+
 
 # Build the application
 RUN npm run build
+COPY .env ./.medusa/server/.env
 
 # Expose the port Medusa will run on
 EXPOSE 9000
