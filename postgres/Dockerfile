@@ -11,6 +11,9 @@ RUN if [ "$CLEAR_DB" = "true" ]; then \
     chown -R postgres:postgres /var/lib/postgresql/data; \
     fi
 
+# Copy SSL init script
+COPY postgres-init-sh .
+
 # Ensure the data directory exists with correct permissions
 RUN mkdir -p /var/lib/postgresql/data && \
     chown -R postgres:postgres /var/lib/postgresql/data
