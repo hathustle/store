@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SL_TARGET_DIR="/etc/postgresql/ssl"
 
 # Ensure the target directory exists
