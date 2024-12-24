@@ -1,7 +1,9 @@
 #!/bin/bash
 
 echo "Checking for SSL certificate updates..."
-
+# List contents of cert directory (for debugging)
+echo "Listing contents of /usr/local/share/ca-certificates:"
+ls -l /usr/local/share/ca-certificates
 # Only handle SSL certs; don't clear the DB unless explicitly requested
 if [ -f "/usr/local/share/ca-certificates/postgres.crt" ] && \
    [ -f "/usr/local/share/ca-certificates/postgres.key" ]; then

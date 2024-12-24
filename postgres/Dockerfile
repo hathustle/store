@@ -2,8 +2,6 @@ FROM postgres:17
 
 RUN apt-get update && apt-get install -y openssl cron
 
-# Copy SSL certs to a Postgres-owned directory (server-certs)
-RUN mkdir -p /var/lib/postgresql/server-certs
 
 # Entrypoint wrapper to set permissions at runtime
 COPY entrypoint-wrapper.sh /usr/local/bin/entrypoint-wrapper.sh
