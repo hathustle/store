@@ -6,7 +6,7 @@ POSTGRES_DATA_DIR="/var/lib/postgresql/data"
 # Check if CLEAR_DB is true and remove PostgreSQL configuration and data files
 if [ "$CLEAR_DB" = "true" ]; then
     echo "CLEAR_DB is set to true. Removing PostgreSQL data and configuration files..."
-    rm -rf "$POSTGRES_DATA_DIR"/*
+    rm -rf "$POSTGRES_DATA_DIR/*"
     echo "PostgreSQL data directory cleared."
 else
     echo "Skipping DB removal..."
