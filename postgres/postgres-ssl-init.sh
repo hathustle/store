@@ -8,6 +8,8 @@ if [ "$CLEAR_DB" = "true" ]; then
     echo "CLEAR_DB is set to true. Removing PostgreSQL data and configuration files..."
     rm -rf "$POSTGRES_DATA_DIR"/*
     echo "PostgreSQL data directory cleared."
+else
+    echo "Skipping DB removal..."
 fi
 
 # Ensure the target directory exists
