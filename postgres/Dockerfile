@@ -14,7 +14,7 @@ RUN if [ ! -d "/var/lib/postgresql/data" ]; then \
 
 # Traefik Labels for SSL Passthrough
 LABEL "traefik.enable"="true"
-LABEL "traefik.tcp.routers.postgres.rule"="HostSNI(postgres.internal)"
+LABEL "traefik.tcp.routers.postgres.rule"="HostSNI(*)"
 LABEL "traefik.tcp.routers.postgres.entrypoints"="https"
 LABEL "traefik.tcp.routers.postgres.tls"="true"
 LABEL "traefik.tcp.services.postgres.loadbalancer.server.port"="5432"
