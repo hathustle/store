@@ -12,8 +12,13 @@ RUN npm install --production
 # Copy the rest of the application code
 COPY . ./
 
+# Download Let's Encrypt root certificate
+RUN curl -o /usr/local/share/ca-certificates/lets-encrypt-x1.crt https://letsencrypt.org/certs/isrgrootx1.pem
+
+# Set the NODE_EXTRA_CA_CERTS environment variable to include the downloaded certificate
+ENV NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/lets-encrypt-x1.crt
 # Update CA certificates
-RUN update-ca-certificates
+# RUN update-ca-certificates
 
 
 # Build the application
