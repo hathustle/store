@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y openssl cron
 # Copy SSL init script
 COPY postgres-ssl-init.sh /usr/local/bin/postgres-ssl-init.sh
 RUN chmod +x /usr/local/bin/postgres-ssl-init.sh
-
+RUN rm -rf /var/lib/postgresql/data
 # Ensure the data directory exists with correct permissions
 RUN if [ ! -d "/var/lib/postgresql/data" ]; then \
       mkdir -p /var/lib/postgresql/data; \
