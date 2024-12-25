@@ -22,7 +22,7 @@ ENV NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/server.crt
 # Build the application
 RUN npm run build
 COPY .env ./.medusa/server/.env
-
+COPY  /usr/local/share/ca-certificates/server.crt  ./.medusa/server/server.crt
 # Expose the port Medusa will run on
 EXPOSE 9000
 
