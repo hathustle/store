@@ -48,9 +48,9 @@ module.exports = defineConfig({
         connection: {
             ssl: {
                 rejectUnauthorized: false,
-                // ca: fs.readFileSync(
-                //   path.join(__dirname, process.env.DATABASE_SSL_CERT || '')
-                // ).toString(),
+                ca: fs.readFileSync(
+                  process.env.DATABASE_SSL_CERT || ''
+                ).toString(),
             } as any
         }
       }
